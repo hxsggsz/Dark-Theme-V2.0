@@ -5,18 +5,16 @@ import { ThemeProvider } from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { Footer } from '../components/footer/Footer';
 import { Header } from '../components/header/Header';
-import Cookie, { CookieAttributes } from 'js-cookie';
-import { parseCookies } from '../libs/parseCookies';
 import { Content } from '../components/content/Content';
-import type { NextPage, GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { GlobalStyle } from '../styles/Global';
 
-const Home: NextPage<CookieAttributes> = ({ themeValue }) => {
-  const [ theme, setTheme ] = useState(() => JSON.parse(themeValue))
-    
-  useEffect(() => {
-    Cookie.set('changedTheme', JSON.stringify(theme))
-  }, [theme])
+interface ServerProps {
+    themeValue: string;
+}
+
+const Home: NextPage = () => {
+  const [ theme, setTheme ] = useState(light);
 
   const toggleTheme = () => theme.title === 'light' ? setTheme(dark) : setTheme(light)
 
@@ -37,15 +35,6 @@ const Home: NextPage<CookieAttributes> = ({ themeValue }) => {
       </ThemeProvider>
     </div>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const cookies = parseCookies(req);
-  return {
-    props: {
-      themeValue: cookies.changedTheme
-    }
-  }
 }
 
 export default Home;
